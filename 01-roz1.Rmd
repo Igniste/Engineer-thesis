@@ -1,0 +1,42 @@
+# Wprowadzenie {#wprowadzenie}
+
+## Cel i zakres pracy {#cel}
+
+Celem pracy jest przedstawienie analizy natężenia ruchu rowerowego w poszczególnych stacjach Kołobrzeskiego Roweru Miejskiego, analiza  dokumentów strategicznych wraz z poglądowym opisem charakterystyki miasta Kołobrzeg oraz prezentacja wniosków z ankiety przeprowadzonej wśród mieszkańców i osób odwiedzających miasto Kołobrzeg. Na podstawie analiz opracowano projekt koncepcji nowych stacji Kołobrzeskiego Roweru Miejskiego oraz zasugerowano stacje w których należy zwiększyć przepustowość ruchu rowerowego.
+
+Zakres przestrzenny podjętych analiz obejmuje gminę miejską Kołobrzeg.
+Przedział czasowy pracy badawczej obejmuje sezon rowerowy 2021 i obejmuje czas działania Kołobrzeskiego Roweru miejskiego, który funkcjonuje od marca do listopada.
+
+W celu opracowania analizy natężenia ruchu w poszczególnych stacjach, najczęściej wybieranych kierunków oraz przedstawienia ogólnego natężenie ruchu rowerowego generowanego przez Kołobrzeski Rower Miejski, opierając się na danych udostępnionych przez operatora Kołobrzeskiego Roweru Miejskiego stworzono wykresy przedstawiające rozkład ilości wypożyczeń w zależności od miesiąca lub pory roku dla poszczególnych dni tygodnia, wypożyczenia przychodzące i wychodzące w zależności od pory dnia dla poszczególnych stacji oraz najczęściej występujące kierunki przemieszczeń w zależności od pory dnia w poszczególne pory roku.
+
+## Materiały, metody i narzędzia badawcze {#zrodl}
+
+Dane poddane analizie pochodzą od operatora Kołobrzeskie Roweru Miejskiego, firmy Nextbike Polska, który jest częścią niemieckiego koncernu Nextbike.
+Są one dostępne są na stronie operatora i zostały pozyskane za pomocą skryptu w języku python, który pobierał dane o lokalizacji rowerów w interwale 2 minutowym.
+Dane opracowane w niniejszej pracy zostały pozyskane w powyższy sposób przez doktora Michała Dzięcielskiego.
+Pozyskane w ten sposób dane poddano transformacji oraz eksploracji za pomocą języka R.
+W tym celu wykorzystano następujące biblioteki:
+
+* *readr* [@R-readr]
+
+* *plm* [@R-plm]
+
+* *ggplot2* [@R-ggplot2]
+
+* *data.table* [@R-data.table]
+
+* *ggTimeSeries* [@R-ggTimeSeries]
+
+* *cowplot* [@R-cowplot]
+
+* *plyr* [@R-plyr]
+
+* *dplyr* [@R-dplyr]
+
+* *tidyr* [@R-tidyr]
+
+* *geosphere* [@R-geosphere]
+
+Ankiety opracowano kierując się zasadami badania sondażowego i konstrukcji kwestionariusza  zgodnie z zasadami nauk społecznych (za @nachmias) za pomocą Microsoft Forms i udostępniono za pośrednictwem internetu na portalu społecznościowym Facebook.
+
+Analizę przestrzenną oraz opracowanie map wykonano za pomocą oprogramowania geoinformacyjnego QGIS, społecznościowego serwisu GIS OpenStreetMap oraz korzystając z serwisów mapowych za pośrednictwem platformy System Informacji Przestrzennej Miasta Kołobrzeg.

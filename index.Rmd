@@ -1,0 +1,18 @@
+---
+title: "Analiza wykorzystania roweru miejskiego w Kołobrzegu w kontekście dokumentów strategicznych miasta"
+titleeng: "Analysis of the rentals of the Kolobrzeg City Bicycle in context of strategic reports in 2021"
+degreetype: "Praca inżynierska"
+author: "Kacper Misiun"
+major: "Zintegrowane Planowanie Rozwoju"
+albumid: "414342"
+year: "2022"
+output: bookdown::pdf_book
+css: "amuthesis.css"
+site: bookdown::bookdown_site
+link-citations: yes
+knit: "bookdown::render_book"
+bibliography:
+  - thesis.bib
+  - packages.bib
+---
+

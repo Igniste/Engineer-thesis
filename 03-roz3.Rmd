@@ -1,0 +1,379 @@
+# Wyniki analiz wypożyczeń rowerów i ankiet {#analizy}
+```{r pakiertbib, echo=FALSE, warning=FALSE}
+pakiety = c("readr",
+"plm",
+"ggplot2",
+"data.table",
+"cowplot",
+"plyr",
+"dplyr",
+"tidyr",
+"geosphere"
+
+)
+
+knitr::write_bib(pakiety, "packages.bib", width = 60)
+```
+
+```{r load srodowisko, include=FALSE, warning=FALSE, }
+load("~/INZYNIERKA/Rmarkdown/figures/analizy/all/env_all_najnowsze.RData")
+```
+
+## Analiza wypożyczeń  {#analiza_wyp}
+
+Analizie poddano dane z sezonu rowerowego 2021, czyli w przedziale czasowym od marca do września 2021 roku.
+Dzięki transformacji i eksploracji danych uzyskano informacje o kierunkach przemieszczeń, popularności danych stacji, połączeniach wychodzących i przychodzących w zależności od pory dnia oraz o ilości wypożyczeń w zależności od godziny i dnia oraz w zależności dnia tygodnia bądź miesiąca.
+Informacje o wypożyczeniach z poszczególnych miesięcy zgrupowano w wypożyczenia obejmujące cały sezon i poszczególne pory roku - wiosna, lato, jesień.
+
+Największą ilość wypożyczeń zaobserwowano latem, na które przypada 58% obserwacji, na jesień zaobserwowano ponad 22% wszystkich obserwacji, natomiast wiosną niecałe 20% (patrz Rycina \@ref(fig:analiza1kol)). 
+Ilość wypożyczeń właściwie o każdej porze roku spada we wtorek, jest to najbardziej widoczne jesienią, jednak ogólna tendencja widoczna jest przez cały sezon.
+W okresie od piątku do niedzieli zaobserwowano wzrost ilości wypożyczeń, co wiąże się najprawdopodobniej z funkcją rekreacyjną roweru miejskiego.
+Latem rower miejski jest wykorzystywany z podobną częstotliwością od niedzieli do czwartku, natomiast w piątek i sobotę jest obserwowany wzrost.
+Wiosną szczyt wypożyczeń przypada na weekend i od poniedziałku do czwartku następował systematyczny spadek wypożyczeń, tendencja ta zmienia się w piątek, kiedy to następuje trend wzrostowy.
+
+Biorąc pod uwagę wyniki analizy natężenia poszczególnych stacji z uwzględnieniem pór roku oraz biorąc pod uwagę ogólne nasilenie ruchu Kołobrzeskiego Roweru Miejskiego w zależności od pór roku, sugeruje się zwiększenie przepustowości stacji Latarnia Morska i Kamienny Szaniec, które są najbardziej obciążonymi stacjami, a stacje te stanowią najpopularniejszy kierunek przemieszczania się użytkowników roweru miejskiego w Kołobrzegu. 
+Zwiększenie przepustowości stacji można zrealizować między innymi poprzez zwiększenie liczby stojaków na rowery
+.
+Analizy wykazują, że prace naprawcze i konserwacyjne rowerów optymalnie powinny być prowadzone w czasie niższej aktywność użytkowników Kołobrzeskiego Roweru Miejskiego, czyli w interwale tygodniowym w poniedziałek i wtorek, natomiast w interwale pór roku wiosną, tak aby w czasie największego natężenia ruchu latem była dostępna jak największa ilość sprawnych rowerów miejskich. 
+
+
+
+```{r analiza1kol, echo=FALSE, warning= FALSE, fig.cap="Procentowy udział wypożyczeń w poszczególnych miesiącach  (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(all,  aes(x="", fill=miesiac)) + geom_bar(aes(fill = miesiac))+
+  coord_polar("y")+
+  geom_text(stat='count', aes(x = 1.55, label=paste0(sprintf("%0.f", ..count../47586*100),"%")),  position = position_stack(vjust = 0.5), size = 4,fontface = "bold")+theme_classic()
+```
+
+```{r analiza1p, echo=FALSE, warning= FALSE, fig.cap="Rozklad ilości wypożyczeń w posczególnych dniach tygodnia w sezonie 2021 (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+#all
+ggplot(all, aes(dzien_tygodnia)) + geom_bar(aes(fill = miesiac))+
+  geom_text(stat='count', aes(label=..count..), vjust=-0.4)
+```
+
+```{r analiza3, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia rowerów w poszczególne dni tygodnia wiosną (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(wiosna, aes(dzien_tygodnia)) + geom_bar(aes(fill = miesiac))+
+  geom_text(stat='count', aes(label=..count..), vjust=-0.4)
+```
+
+```{r analiza4, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia rowerów w poszczególne dni tygodnia latem (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(lato, aes(dzien_tygodnia)) + geom_bar(aes(fill = miesiac))+
+  geom_text(stat='count', aes(label=..count..), vjust=-0.4)
+```
+
+```{r analiza5, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia rowerów w poszczególne dni tygodnia jesienią (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(jesien, aes(dzien_tygodnia)) + geom_bar(aes(fill = miesiac))+
+  geom_text(stat='count', aes(label=..count..), vjust=-0.4)
+```
+```{r analiza6, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia wychodzące w zależności od pory dnia wiosną (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(wiosna_kierunki, aes(name_start))+geom_bar(aes(fill=pora_dnia))+coord_flip()
+
+```
+Rano zdefiniowano jako pora dnia od godziny 5 do 9, natomiast popołudnie od godziny 15 do 18.
+
+```{r analiza7, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia wychodzące w zależności od pory dnia latem (Źródło: Opracowanie własne) ", out.width=400}
+library(ggplot2)
+ggplot(lato_kierunki, aes(name_start))+geom_bar(aes(fill=pora_dnia))+coord_flip()
+
+```
+```{r analiza8, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia wychodzące w zależności od pory dnia jesienią (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(jesien_kierunki, aes(name_start))+geom_bar(aes(fill=pora_dnia))+coord_flip()
+
+```
+Jesienia można zaobserwowaćwiększy udział wypożyczeń na stacji dworzec PKP oraz 
+```{r analiza9, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia przychodzące w zależności od pory dnia wiosną (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(wiosna_kierunki, aes(name_end))+geom_bar(aes(fill=pora_dnia))+coord_flip()
+
+```
+
+```{r analiza10, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia przychodzące w zależności od pory dnia latem (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(lato_kierunki, aes(name_end))+geom_bar(aes(fill=pora_dnia))+coord_flip()
+
+```
+
+```{r analiza11, echo=FALSE, warning= FALSE, fig.cap="Wypożyczenia przychodzące w zależności od pory dnia jesienią (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+ggplot(jesien_kierunki, aes(name_end))+geom_bar(aes(fill=pora_dnia))+coord_flip()
+
+```
+
+```{r analiza12, echo=FALSE, warning= FALSE, fig.cap="Najpopularniejsze kierunki w zależności od pory dnia wiosną (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+library(dplyr)
+wiosna_kierunki %>%
+  filter(direct_name %in% wiosna_kierunki2$direct_name) %>%
+  mutate(direct_name = factor(direct_name, levels = levels(wiosna_kierunki2$direct_name))) %>%
+  ggplot(aes(x = direct_name, fill = pora_dnia)) +
+  geom_bar()+coord_flip()
+```
+```{r analiza13, echo=FALSE, warning= FALSE, fig.cap="Najpopularniejsze kierunki w zależności od pory dnia latem (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+library(dplyr)
+
+lato_kierunki %>%
+  filter(direct_name %in% lato_kierunki2$direct_name) %>%
+  mutate(direct_name = factor(direct_name, levels = levels(lato_kierunki2$direct_name))) %>%
+  ggplot(aes(x = direct_name, fill = pora_dnia)) +
+  geom_bar()+coord_flip()
+```
+
+```{r analiza14, echo=FALSE, warning= FALSE, fig.cap="Najpopularniejsze kierunki w zależności od pory dnia jesienią (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+library(dplyr)
+
+jesien_kierunki %>%
+  filter(direct_name %in% jesien_kierunki2$direct_name) %>%
+  mutate(direct_name = factor(direct_name, levels = levels(jesien_kierunki2$direct_name))) %>%
+  ggplot(aes(x = direct_name, fill = pora_dnia)) +
+  geom_bar()+coord_flip()
+```
+```{r analiza15, echo=FALSE, warning= FALSE, fig.cap="Najpopularniejsze kierunki w zależności od pory dnia jesienią (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+library(dplyr)
+jesien_kierunki %>%
+  filter(direct_name %in% jesien_kierunki2$direct_name) %>%
+  mutate(direct_name = factor(direct_name, levels = levels(jesien_kierunki2$direct_name))) %>%
+  ggplot(aes(x = direct_name, fill = pora_dnia)) +
+  geom_bar()+coord_flip()
+```
+
+```{r analiza16, echo=FALSE, warning= FALSE, fig.cap="Najpopularniejsze kierunki w sezonie 2021 (Źródło: Opracowanie własne)", out.width=400}
+library(ggplot2)
+library(dplyr)
+
+all %>%
+  filter(direct_name %in% all_kierunki3$direct_name) %>%
+  mutate(direct_name = factor(direct_name, levels = levels(all_kierunki3$direct_name))) %>%
+  ggplot(aes(x = direct_name, fill = miesiac)) +
+  geom_bar()+coord_flip()
+```
+## Badanie ankietowe {#ankieta}
+
+Badanie ankietowe przeprowadzono za pomocą Microsoft Forms.
+Kwestionariusz składał się z 10 pytań ogólnych dostępnych dla wszystkich ankietowanych oraz pytań, które dostosowane były do udzielonych przez respondentów odpowiedzi.
+Pierwsze rozgałęzienie dotyczy miejsca zamieszkania - respondenci otrzymywali inny zestaw pytań w zależności od ich zamieszkania tz. w Kołobrzegu i okolicach lub poza Kołobrzegiem (powyżej 50 km).
+Następnie mieszkańcy Kołobrzegu zostali podzieleni na korzystających z Kołobrzeskiego Roweru Miejskiego oraz tych, którzy dotychczas z niego nie korzystali.
+Każda z tych grupo dostała przystosowaną pod nią listę pytań.
+Osoby spoza Kołobrzegu były przekierowywane do pytań dla "turystów", gdzie następnym kryterium rozgałęzienia był fakt korzystania z roweru miejskiego w Kołobrzegu.
+Osobna sekcja pytań do precyzujących dotyczyła osób, które zetknęły się z brakiem rowerów na stacji.
+Łącznie kwestionariusz posiadał 40 pytań, natomiast w zależności od odpowiedzi respondenta udzielał on odpowiedzi od 14 do 23 pytań - średnio 18 pytań.
+Średni czas jaki respondenci poświęcali na udzielenie odpowiedzi wynosił 3 minuty i 33 sekundy.
+
+Kwestionariusz był dostępny od 8 lipca do 2 września.
+Został udostępniony na wybranych grupach społecznościowych portalu Facebook takich jak:
+
+- Forum Mieszkańców Miasta Kołobrzeg
+
+- KOŁOBRZEG
+
+- Wakacje dla seniora
+
+- Rowerem przez Pomorze Zachodnie
+
+- Twoje wakacje nad morzem
+
+Odpowiedzi udzieliło 102 respondentów, w tym 38% mężczyzn i 72% kobiet (patrz Rycina \@ref(fig:ankieta1)).
+
+```{r ankieta1, echo=FALSE, warning= FALSE, fig.cap="Struktura płci wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/1.jpg")
+```
+
+Wśród grupy wiekowej respondentów przeważały osoby między 27 a 40 rokiem życia oraz między 41 i 60 rokiem życia, stanowiąc odpowiednio 39% i 38% respondentów (patrz Rycina \@ref(fig:ankieta2)).
+Osoby między 18 a 26 rokiem życia stanowią 13% respondentów.
+Wynika z tego, że 90% badanych respondentów jest w wieku produkcyjnym (między 18 a 60 rokiem życia) co koreluje z pytaniem czwartym dotyczącym statusu zawodowego, gdzie 72% osób określiło swój status jako osoby pracujące (patrz Rycina \@ref(fig:ankieta4)).
+Badanie wykazuje się niską reprezentatywnością osób młodych poniżej 18 roku życia, gdzie prawdopodobną przyczyną jest nie uwzględnienie grup dedykowanych osobom młodym.
+Uzyskano dość dobrą reprezentatywność osób po 60 roku życia, biorąc pod uwagę wysokie wykluczenie cyfrowe osób w tym wieku.
+Badanie ankietowe ukazuje więc 
+
+```{r ankieta2, echo=FALSE, warning= FALSE, fig.cap="Struktura wieku wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/2.jpg")
+```
+
+Większość respondentów (56%) posiada wykształcenie wyższe, wynika to z charakteru badania za pośrednictwem internetu, gdzie według badań osoby z wyższym wykształceniem są bardziej chętne na udział w ankietach. (*to było w tym co dostałem*).
+25% wykształcenie średnie, 11 % policealne, 5% zawodowe i 3% podstawowe, co w przybliżeniu odpowiada respondentom poniżej 18 roku życia (patrz Rycina \@ref(fig:ankieta3)).
+
+```{r ankieta3, echo=FALSE, warning= FALSE, fig.cap="Struktura wykształcenia wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/3.jpg")
+```
+Pod względem statusu zawodowego większość stanowią osoby pracujące (72%). Liczba osób na emeryturze pokrywa się z liczbą osób po 60 roku życia, przy czym w pytaniu tym możliwe było zaznaczenie kilku odpowiedzi- jest więc prawdopodobne, że część respondentów emerytów równocześnie pracuje. Liczba osób studiujących jest dość niska, porównując z ponad dwukrotnie większą liczbą osób w wieku od 18 do 26 roku życia (patrz Rycina \@ref(fig:ankieta4)).
+
+```{r ankieta4, echo=FALSE, warning= FALSE, fig.cap="Status zawodowy wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/4.jpg")
+```
+
+Zdecydowana większość respondentów posiada własny rower (82%), jest to wysoki wynik. Średnio niecałe 62% polskich gospodarstw domowych posiada rower (@gosp_rower).
+Spośród osób posiadających własny rower 92% osób słyszało o Kołobrzeskim rowerze miejskim (patrz Rycina \@ref(fig:ankieta5)).
+
+```{r ankieta5, echo=FALSE, warning= FALSE, fig.cap="Posiadanie prywatnego roweru wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/5.jpg")
+```
+
+Większość osób badanych korzysta z roweru dość rzadko, 34% ankietowanych korzysta z roweru rzadziej niż raz w miesiącu, natomiast kilka razy w miesiącu jeździ 29% respondentów.
+Te dwie grupy stanowią razem 63% badanych osób.
+Kilka razy w tygodniu jeździ 25% ankietowanych, a 12% osób jeździ praktycznie codziennie. 
+Podsumowując grupa aktywnych rowerzystów wśród badanych wynosi 37% (patrz Rycina \@ref(fig:ankieta6)).
+
+```{r ankieta6, echo=FALSE, warning= FALSE, fig.cap="Częstość podróży wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/6.jpg")
+```
+Większośc podróży rowerem wśród respondentów trwa poniżej godziny - 24% osób badanych podróżuje rowerem do 20 minut, wśród 37% podróż trwa od 21 minut do godziny.
+Podróż trwająca miedzy jedną a dwiema godzinami jest deklarowana przez 25% respondentów, natomiast podróż powyżej dwóch godzin deklaruje 15% ankietowanych.
+Wśród osób, których podróż rowerem zwykle trwa ponad 2 godziny wszyscy posiadają własny rower. Sugeruje to, że docelowo rower miejski powinien być przeznaczony dla osób, których średnia podróż rowerem jest krótsza co podkreśla teoria oraz uzyskane wyniki analiz (patrz Rycina \@ref(fig:ankieta7)).
+
+```{r ankieta7, echo=FALSE, warning= FALSE, fig.cap="Czas trwania podróży rowerem wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/7.jpg")
+```
+
+Większość badanych (92%) słyszała o Kołobrzeskim Rowerze Miejskim  
+(patrz Rycina \@ref(fig:ankieta8)), przy czym wszyscy mieszkańcy Kołobrzegu słyszeli o rowerze miejskim (patrz Rycina \@ref(fig:ankieta10)).
+
+```{r ankieta8, echo=FALSE, warning= FALSE, fig.cap="Znajomość Kołobrzeskiego Roweru Miejskiego wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/8.jpg")
+```
+
+Istotna część (37%) respondentów deklaruje korzystanie z roweru miejskiego w godzinach 14:00-18:00.
+Duża liczba badanych respondentów jeździ od 10 do 14 lub od 18 do 22, odpowiednio 26% i 27%.
+Respondenci rzadko jeżdżą rano w godzinach 6:00-10:00 (9%) i bardzo rzadko w godzinach wieczorno-nocnych między 22 a 2 w nocy(patrz Rycina \@ref(fig:ankieta9)).
+
+
+```{r ankieta9, echo=FALSE, warning= FALSE, fig.cap="Godziny podróżowania rowerem wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/9.jpg")
+```
+
+Kolejnym pytanie dotyczyło miejsca zamieszkania.
+Wśród respondentów większość (57%) mieszka na terenie miasta Kołobrzeg, natomiast 17% w pobliżu Kołobrzegu. Oznacza to, że większość osób badanych to osoby związane z miastem Kołobrzeg.
+Natomiast 26% respondentów to osoby mieszkające powyżej 50 kilometrów od Kołobrzegu.
+Założono, że są to osoby odwiedzające Kołobrzeg w celach turystycznych (patrz Rycina \@ref(fig:ankieta10)).
+
+```{r ankieta10, echo=FALSE, warning= FALSE, fig.cap="Miejsce zamieszkania respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/10.jpg")
+```
+
+Wśród ankietowanych mieszkających w Kołobrzegu, bądź w pobliżu Kołobrzegu 51% respondentów posiada Kołobrzeską Kartę Mieszkańca, natomiast 13% planuje ją wyrobić.
+Karty nie posiada i nie planuje jej wyrobić 36% ankietowanych (patrz Rycina \@ref(fig:ankieta11)).
+
+```{r ankieta11, echo=FALSE, warning= FALSE, fig.cap="Posiadanie Kołobrzeskiej Karty Mieszkańca wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/11.jpg")
+```
+
+Z mieszkańców Kołobrzegu lub okolic ponad połowa (52%) ankietowanych korzystało z Kołobrzeskiego Roweru Miejskiego (patrz Rycina \@ref(fig:ankieta12)).
+Spośród tych osób większość (44%) korzysta z roweru miejskiego rzadziej niż raz na miesiąc, 38% korzysta kilka razy w miesiącu, 13% kilka razy w tygodniu a 5% praktycznie codziennie (patrz Rycina \@ref(fig:ankieta13)).
+
+ 
+```{r ankieta12, echo=FALSE, warning= FALSE, fig.cap="Korzystający wśród respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/12.jpg")
+```
+
+```{r ankieta13, echo=FALSE, warning= FALSE, fig.cap="Struktura częstości korzystania z Kołobrzeskiego Roweru Miejskiego (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/13.jpg")
+```
+
+Głównym deklarowanym powodem (46%) korzystania z roweru miejskiego jest dojazd do "innych" miejsc takich jak spotkanie ze znajomymi czy dojechanie do sklepu.
+Częstym powodem jest rekreacyjna jazda na rowerze (38%).
+Dojazdy do pracy i dojazdy do szkoły są powodem do korzystania z roweru miejskiego jedynie dla 16% ankietowanych (patrz Rycina \@ref(fig:ankieta14)).
+
+```{r ankieta14, echo=FALSE, warning= FALSE, fig.cap="Główny powód korzystania z KRM deklarowany przez respondentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/14.jpg")
+```
+
+Jedynie 5% respondentów korzystało z rowerów z fotelikiem dziecięcym. 
+Tyle samo procent respondentów korzystało z roweru z fotelikiem w wyniku braku innych rowerów na stacji.
+
+Kołobrzeżanie oceniają kołobrzeski rower miejski na 3.46 w pięciopunktowej skali (patrz Rycina  (patrz Rycina \@ref(fig:ankieta16)).
+Za główna zaletę systemu wymieniają jego dostępność, niski koszt oraz możliwość szybkiego przemieszczania się po mieście.
+Z drugiej strony za głównymi wadami Kołobrzeskiego Roweru Miejskiego według respondentów jest zły stan techniczny pojazdów oraz za mała gęstość stacji.
+Wielu respondentów zwracało uwagę na błędnie działającą aplikację oraz wadliwe zapięcia na stacjach.
+Wielu respondentów (61%) spotkało się z brakiem wolnego roweru na stacji, przy czym 23% osób taka sytuacja zdarzyła się często, a 38% osób miało z nią do czynienia sporadycznie  (patrz Rycina \@ref(fig:ankieta20)).
+
+
+```{r ankieta16, echo=FALSE, warning= FALSE, fig.cap="Ocena Kołobrzeskiego Roweru Miejskiego (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/16.jpg")
+```
+
+```{r ankieta20, echo=FALSE, warning= FALSE, fig.cap="Brak wolnych rowerów na stacji (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/20.jpg")
+```
+
+Spośród mieszkańców, którzy nie korzystali z roweru miejskiego 44% ankietowanych uważa, że budowa ścieżki rowerowej zdecydowanie spowoduje więcej dojazdów do pracy/szkoły, a 36% jest zdania, że raczej spowoduje więcej dojazdów.(patrz Rycina \@ref(fig:ankieta21))
+Respondenci proponują budowę nowych ścieżek rowerowych w pobliżu dróg dojazdowych- zwłaszcza w kierunku zachodnim w stronę Grzybowa (proponowana ulica Grzybowa, Plażowa, Jedności Narodowej), ale także drogę rowerową łączącą Dygowo oraz Ustronie Morskie z Kołobrzegiem.
+Budowa wymienionych powyżej ścieżek rowerowych była najczęstszą odpowiedzią wśród respondentów.
+
+znaczący głos dotyczył również budowy ścieżki rowerowej i kładki na kanale drzewnym na ul Łopuskiego.
+Przy *Dodać przypis do mapy z proponowanymi ścieżkami i stacjami gdy powstanie*
+
+```{r ankieta21, echo=FALSE, warning= FALSE, fig.cap="Zdanie dotyczące korelacji nowych ścieżek rowerowych a dojazdów do pracy wśród responentów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/21.jpg")
+```
+
+Respondenci zostali zapytani czy powstanie stacji rowerowej w korzystnej dla nich lokalizacji spowoduje, że skorzystają oni z Kołobrzeskiego Roweru Miejskiego.
+Przeważały głosy niezdecydowane- odpowiedzi "nie wiem" udzieliło 31% ankietowanych, "raczej tak" 23%, "raczej nie" 26%. 
+Wśród osób zdecydowanych zdecydowanie było więcej głosów przeciwnych - 17%.
+Jedynie jedna osoba (3%) odpowiedziała zdecydowanie, że powstanie stacji wypożyczeń w korzystnej dla niej lokalizacji spowoduje korzystnie z roweru miejskiego (patrz Rycina \@ref(fig:ankieta23)).
+
+Wśród proponowanych nowych stacji wypożyczeń najwięcej ankietowanych skłoniło się ku propozycji stacji w Centrum, oraz ulicy na ulicy Bałtyckiej. 
+Część propozycji pojawiających się tylko raz zostało odrzucone w drodze analizy, bowiem wiele z proponowanych nowych stacji znajdowała się w odległości mniejszej niż 10 minut pieszo od już istniejących stacji wypożyczeń.
+Za realistyczną i potrzebną propozycje stwierdzono stacje wypożyczeń na ulicy wschodniej oraz ewentualnie na ulicy Janiskiej przy rodzinnych ogródkach działkowych.
+
+```{r ankieta23, echo=FALSE, fig.cap="Zdanie responentów dotyczących ich deklarowanego zachowania jeśli powstanie nowa stacja rowerowa w ich sąsiedztwie (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/23.jpg")
+```
+
+
+Mieszkańcy Kołobrzegu jako główny powód nie korzystania z roweru miejskiego wymieniają posiadanie własnego roweru oraz brak stacji w pobliżu miejsca zamieszkania.
+Warto mięć na uwadze wcześniejsze pytanie z którego wynika, że niewielka liczna osób byłaby skłonna korzystać z roweru, jeśli powstałaby nowa stacji w korzystnej dla nich lokacji.
+
+Kołobrzeżanie, nie korzystający z roweru miejskiego podobnie ocenili Kołobrzeski Rower Miejski jak osoby z niego korzystające.
+Średnia ocena wynosiła 3.47, natomiast najliczniejszą przyznaną ocena było 3, czyli inaczej niż w przypadku osób korzystających gdzie oceny były inaczej rozlokowane (dominowała ocena 5 z liczną grupą, która wystawiła 2 i 3) w pięciostopniowej skali (patrz Rycina \@ref(fig:ankieta26)).
+
+```{r ankieta26, echo=FALSE, fig.cap="Ocena KRM przez respondentów nie korzystających z KRM (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/26.jpg")
+```
+
+Wśród respondentów mieszkających ponad 50 kilometrów od Kołobrzegu (czyli potencjalni turyści) 81% ankietowanych nie korzystało z Kołobrzeskiego Roweru Miejskiego. 
+Oznacza to, że jedynie pięciu ankietowanych "turystów" korzystało z roweru miejskiego w Kołobrzegu (patrz Rycina \@ref(fig:ankieta27)).
+Wskazuje to na konieczność promocji Kołobrzeskiego Roweru Miejskiego wśród przyjezdnych.
+Tym bardziej, że zdecydowana większość turystów nie jest zdecydowana czy skorzysta z Kołobrzeskiego Roweru Miejskiego w przyszłości, gdy odwiedzi miasto (patrz Rycina \@ref(fig:ankieta35)).
+Według ankietowanych turystów skłoniłby do korzystania pierwszy darmowy przejazd, możliwość jazdy bez aplikacji (płatność gotówką lub kartą) oraz lepsza sieć dróg rowerowych w Kołobrzegu.
+
+Większość turystów nie korzysta z roweru miejskiego w swoim miejscu zamieszkania, przy czym turyści, którzy korzystali z KRM częściej korzystali z roweru miejskiego w miejscu zamieszkania (niska próba- 5 osób).
+
+```{r ankieta27, echo=FALSE, fig.cap="Korzystanie z KRM przez turystów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/27.jpg")
+```
+
+```{r ankieta35, echo=FALSE, fig.cap="Planowana podróż KRM przez turystów w czasie następnej wizyty (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/35.jpg")
+```
+
+
+Ankietowani, którzy spotkali się z brakiem rowerów na stacjach wypożyczeń poproszeni zostali o wskazanie stacji na których dochodziło do braków, przy czym możliwe było zaznaczenie wielu stacji.
+Brak roweru zaobserwowano wśród ankietowanych na każdej z 12 stacji.
+Najczęściej brak rowerów wskazano na stacji ul. Słowieńców i Kamienny Szaniec.
+Wśród stacji, gdzie często dochodziło do braków jest ul. 1 Maja, Ratusz, Stadion, Latarnia Morska (patrz Rycina \@ref(fig:ankieta38)).
+W przypadku, gdy była możliwa tylko jedna odpowiedź i respondenci zostali poproszeni o wskazanie stacji z najgorszą dyspozycyjnością to najczęściej wskazywano stacje na ulicy Słowieńców. (patrz Rycina \@ref(fig:ankieta39)).
+Zły wynik uzyskały podobne stacje co w poprzednim pytaniu, czyli ul. 1 Maja, Stadion, Ratusz oraz Kamienny Szaniec.
+Stacje na ulicy Toruńskiej, Świętego Wojciecha oraz Dworzec PKP tym razem nie zostały wskazane ani razu, co świadczy o generalnie właściwej dyspozycyjności rowerów na tych stacjach.
+```{r ankieta38, echo=FALSE, fig.cap="Brak rowerów- stacje (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/38.jpg")
+```
+
+```{r ankieta39, echo=FALSE, fig.cap="Stacja o najgorszej dyspozycyjności rowerów (Źródło: Microsoft Forms)", out.width=400}
+knitr::include_graphics("figures/ankieta/39.jpg")
+```
+
+
+
+
+
+
+
+
+

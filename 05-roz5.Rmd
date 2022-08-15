@@ -1,0 +1,11 @@
+# Podsumowanie {#podsumowanie}
+
+Głównym celem pracy było opracowanie danych pozyskanych za pośrednictwem Nextbike API za pomocą języka R, w celu uzyskania informacji o natężeniu ruchu rowerowego na poszczególnych stacjach Kołobrzeskiego Roweru Miejskiego w zależności od pory roku, miesiąca, dnia, pory dnia oraz uzyskanie informacji o najpopularniejszych przemieszczeniach. 
+Analizy wzbogacono o ankietę dotyczącą Kołobrzeskiego Roweru Miejskiego oraz miejskiej infrastruktury rowerowej, w której respondenci zostali otrzymali inny zestaw pytań w zależności od charakteru ich relacji z miastem Kołobrzeg- mieszkańcy, turyści.
+Przedstawiono charakterystykę miasta - historię, uwarunkowania geograficzno-przyrodnicze, środowiskowe, klimatyczne oraz stan infrastruktury rowerowej i charakterystykę gospodarczą miasta.
+Analizie poddano również dokumenty planistyczne i strategiczne, to znaczy studium uwarunkowań i kierunków zagospodarowania przestrzennego oraz strategie rozwoju miasta SmartCity.
+Następnie opracowano analizę SWOT (silne,słabe strony, szanse i zagrożenia) w kontekście polityki przestrzennej i infrastruktury rowerowej
+
+Wynikiem analiz jest projekt koncepcji nowych stacji Kołobrzeskiego Roweru Miejskiego wraz z 
+przedstawieniem nowych stacji rowerowych na mapie miasta Kołobrzeg oraz z przedstawionymi drogami rowerowymi (drogi rowerowe oraz drogi z dopuszczalnym ruchem rowerowym). 
+Sporządzono także mapy przedstawiające sąsiedztwo proponowanych nowych stacji roweru miejskiego wraz z planem miejscowym, w sytuacji, gdy proponowana stacja znajduje się na terenie lub sąsiedztwie terenu objętego planem miejscowym.  
